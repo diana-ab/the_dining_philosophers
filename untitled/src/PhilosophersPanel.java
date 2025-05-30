@@ -47,6 +47,8 @@ public class PhilosophersPanel extends JPanel {
             //repaint();
 
         }
+        graphics.setColor(Color.RED);
+        graphics.fillOval(TheFeast.CANTER_TABLE_X - 2, TheFeast.CANTER_TABLE_Y - 2, 5, 5);
     }
 }
 

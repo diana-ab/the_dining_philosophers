@@ -10,11 +10,14 @@ public class TheFeast {
     public static final int NUM_PHILOSOPHERS = 5;
     public static final String[] NAMES = {"John Lock", "Plato", "Socrates", "Nietzsche", "Descartes"};
 
+
     private List<Philosopher> philosophers;
     private Map<Integer, Fork> forks;
+    private Waiter waiter;
 
 
     public TheFeast() {
+        this.waiter=new Waiter(NUM_PHILOSOPHERS);
         this.forks = this.generateFork();
         this.philosophers = this.generatePhilosopher();
 
@@ -45,39 +48,30 @@ public class TheFeast {
         List<Philosopher> tempPhilosophers = new ArrayList<>();
         for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
             double angle = 2 * Math.PI * i / NUM_PHILOSOPHERS;
-            int x = (int) (CANTER_TABLE_X + RADIUS_TABLE * Math.cos(angle));
-            int y = (int) (CANTER_TABLE_Y + RADIUS_TABLE * Math.sin(angle));
+            int x = (int) (CANTER_TABLE_X + RADIUS_TABLE * Math.cos(angle) );
+            int y = (int) (CANTER_TABLE_Y + RADIUS_TABLE * Math.sin(angle) );
+            x= x-Philosopher.WIDTH/2;
+            y=y-Philosopher.HEIGHT/2;
+            Fork leftFork = forks.get(i);
+            Fork rightFork = forks.get((i + 1) % NUM_PHILOSOPHERS);
 
-            Fork leftFork = forks.get((i + 1));
-            Fork rightFork = forks.get((i + 1) % NUM_PHILOSOPHERS + 1);
-
-            Philosopher tempPhilo = new Philosopher(NAMES[i], leftFork, rightFork, x, y);
+            Philosopher tempPhilo = new Philosopher(NAMES[i], leftFork, rightFork, x, y,this.waiter);
             tempPhilosophers.add(tempPhilo);
         }
         return tempPhilosophers;
     }
 
-
     private Map<Integer, Fork> generateFork() {
-//        Map<Integer, Fork> tempForks = new HashMap<>();
-//        for (int i = 1; i <= NUM_PHILOSOPHERS; i++) {
-//            tempForks.put(i, new Fork(i, 0, 0));
-//        }
-//        return tempForks;
-
-
-
         Map<Integer, Fork> tempForks = new HashMap<>();
-        int forkRadius = RADIUS_TABLE ;
+        int forkRadius = RADIUS_TABLE - 60;
 
-        for (int i = 1; i <= NUM_PHILOSOPHERS; i++) {
-            double forkAngle = 2 * Math.PI * (i - 1) / NUM_PHILOSOPHERS;
+        for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+            double forkAngle = 2 * Math.PI * i / NUM_PHILOSOPHERS;
             int forkX = (int) (CANTER_TABLE_X + forkRadius * Math.cos(forkAngle));
             int forkY = (int) (CANTER_TABLE_Y + forkRadius * Math.sin(forkAngle));
             tempForks.put(i, new Fork(i, forkX, forkY));
         }
         return tempForks;
-
     }
 
 }
