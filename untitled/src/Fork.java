@@ -10,7 +10,6 @@ public class Fork extends ProgramObject {
     private int originalY;
     private int number;
     private Philosopher heldBy;
-
     private int targetX;
     private int targetY;
 
@@ -21,7 +20,6 @@ public class Fork extends ProgramObject {
         this.number = number;
         this.originalX = x;
         this.originalY = y;
-
         this.targetX = x;
         this.targetY = y;
     }
@@ -54,8 +52,8 @@ public class Fork extends ProgramObject {
             this.setX(targetX);
             this.setY(targetY);
         } else {
-            this.setX((originalX));
-            this.setY((originalY));
+            this.setX((this.originalX));
+            this.setY((this.originalY));
         }
     }
 

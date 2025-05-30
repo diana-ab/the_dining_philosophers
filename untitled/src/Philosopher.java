@@ -39,12 +39,11 @@
             this.fork2 = fork2;
             this.activePhilosopher = true;
 
-
-            statusMap = new HashMap<>();
-            statusMap.put(THINKING, new PhilosopherStatus("thinking", LIGHT_GRAY));
-            statusMap.put(WAITING_FOR_FORK_1, new PhilosopherStatus("Waiting for the left fork: fork num"+ fork1.getNumber(), ORANGE));
-            statusMap.put(WAITING_FOR_FORK_2, new PhilosopherStatus("Waiting for the right fork: fork num" +fork2.getNumber(), ORANGE));
-            statusMap.put(EATING, new PhilosopherStatus("eating", GREEN));
+            this.statusMap = new HashMap<>();
+            this.statusMap.put(THINKING, new PhilosopherStatus("thinking", LIGHT_GRAY));
+            this.statusMap.put(WAITING_FOR_FORK_1, new PhilosopherStatus("Waiting for the left fork: fork num"+ fork1.getNumber(), ORANGE));
+            this.statusMap.put(WAITING_FOR_FORK_2, new PhilosopherStatus("Waiting for the right fork: fork num" +fork2.getNumber(), ORANGE));
+            this.statusMap.put(EATING, new PhilosopherStatus("eating", GREEN));
 
             this.activatePhilosopher();
         }
@@ -123,7 +122,6 @@
         }
 
         public void activatePhilosopher() {
-
             this.activePhilosopher = true;
             this.startAction();
             System.out.println("start " + this.name);
