@@ -9,8 +9,8 @@
 
     public class Philosopher extends ProgramObject {
         public static final int THINKING = 1;
-        public static final int WAITING_FOR_LEFT_FORK_1 = 2;
-        public static final int WAITING_FOR_RIGHT_FORK_2 = 3;
+        public static final int WAITING_FOR_FORK_1 = 2;
+        public static final int WAITING_FOR_FORK_2 = 3;
         public static final int EATING = 4;
         public static final int WIDTH = 140;
         public static final int HEIGHT = 100;
@@ -27,29 +27,27 @@
         private boolean activePhilosopher;
         private Thread thread;
         private Map<Integer, PhilosopherStatus> statusMap;
-        private Waiter waiter;
-        //  צריך סטטוס חדש שמבקש לשבת
 
 
-        public Philosopher(String name, Fork leftFork1, Fork rightFork2, int x, int y,Waiter waiter) {
+
+        public Philosopher(String name, Fork leftFork1, Fork rightFork2, int x, int y) {
             super(x, y, WIDTH, HEIGHT);
             this.name = name;
-            this.waiter=waiter;
             this.status = THINKING;
             this.eatingCount = 0;
             this.leftFork1 = leftFork1;
             this.rightFork2 = rightFork2;
             this.activePhilosopher = true;
 
-            this.statusMap = new HashMap<>();
-            this.statusMap.put(THINKING, new PhilosopherStatus("thinking", LIGHT_GRAY));
-            this.statusMap.put(WAITING_FOR_LEFT_FORK_1, new PhilosopherStatus("Waiting for the left fork: fork num"+ leftFork1.getNumber(), ORANGE));
-            this.statusMap.put(WAITING_FOR_RIGHT_FORK_2, new PhilosopherStatus("Waiting for the right fork: fork num" + rightFork2.getNumber(), ORANGE));
-            this.statusMap.put(EATING, new PhilosopherStatus("eating", GREEN));
+
+            statusMap = new HashMap<>();
+            statusMap.put(THINKING, new PhilosopherStatus("thinking", LIGHT_GRAY));
+            statusMap.put(WAITING_FOR_FORK_1, new PhilosopherStatus("Waiting for the left fork: fork num"+ leftFork1.getNumber(), ORANGE));
+            statusMap.put(WAITING_FOR_FORK_2, new PhilosopherStatus("Waiting for the right fork: fork num" + rightFork2.getNumber(), ORANGE));
+            statusMap.put(EATING, new PhilosopherStatus("eating", GREEN));
 
             this.activatePhilosopher();
         }
-
 
         private PhilosopherStatus getStatusInfo() {
             return statusMap.getOrDefault(this.status, new PhilosopherStatus("", WHITE));
@@ -61,9 +59,7 @@
                 Random random = new Random();
                 while (this.activePhilosopher) {
                     Utils.sleep(random.nextInt(5000));
-
-                    this.status = WAITING_FOR_LEFT_FORK_1;
-
+                    this.status = WAITING_FOR_FORK_1;
                     while (this.leftFork1.getHeldBy() != null) {
                         Utils.sleep(100);
                         if (breakLoopIfNecessary()) {
@@ -77,7 +73,7 @@
                     }
                     this.leftFork1.setHeldBy(this);
                     Utils.sleep(random.nextInt(2000));
-                    this.status = WAITING_FOR_RIGHT_FORK_2;
+                    this.status = WAITING_FOR_FORK_2;
                     while (this.rightFork2.getHeldBy() != null) {
                         Utils.sleep(100);
                         if (breakLoopIfNecessary()) {
@@ -85,12 +81,10 @@
                             return;
                         }
                     }
-
                     if (breakLoopIfNecessary()) {
                         System.out.println("return second");
                         return;
                     }
-
                     this.rightFork2.setHeldBy(this);
                     this.status = EATING;
                     Utils.sleep(random.nextInt(5000));
@@ -129,6 +123,7 @@
         }
 
         public void activatePhilosopher() {
+
             this.activePhilosopher = true;
             this.startAction();
             System.out.println("start " + this.name);
@@ -163,20 +158,27 @@
             g.drawString("ate: " + this.eatingCount, this.getX() + X_LOCATION_FOR_WRITING, this.getY() + (Y_LOCATION_FOR_WRITING*3));
         }
 
+        public void setLeftFork1(Fork leftFork1) {
+            this.leftFork1 = leftFork1;
+        }
 
-        public Fork getRightFork2() {
-            return rightFork2;
+        public void setRightFork2(Fork rightFork2) {
+            this.rightFork2 = rightFork2;
         }
 
         public Fork getLeftFork1() {
             return leftFork1;
         }
 
+        public Fork getRightFork2() {
+            return rightFork2;
+        }
+
         public int getEatingCount() {
             return eatingCount;
         }
 
-        public void setStatus(int status) {
-            this.status = status;
+        public void setEatingCount(int eatingCount) {
+            this.eatingCount = eatingCount;
         }
     }
