@@ -1,44 +1,21 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Waiter {
+
     private List <Philosopher> setingPhilosopher;
     private int maxSetingPhilosophers;
+    private Map<Fork,Philosopher>  saveForkForPhilo;
 
     public Waiter(int cherNumber) {
         this.maxSetingPhilosophers =cherNumber-1;
         this.setingPhilosopher=new ArrayList<>();
+        this.saveForkForPhilo=new HashMap<>();
+
 
     }
-//    הצעה שלי היא שהמלצר הוא זה שנותן רשות לקחת מזלג ומזלג לפילו אבל גם הוא שומר במקביל להכי מורעב בזמן נתון את המזלגות
-//    שככה שבזמן שהוא מחכה בין לקיחת מזלג למזלג הם לא ילקחו לו
-//    השינוי יהיה שכלל הפילוסופים יבקשו כל פעם לדעת מהמלצר עם המזלג שלהם פנוי
-//    כל פעם מזלג אחר בתורו
-
-
-//    הצעה שלי היא שהמלצר הוא זה שנותן רשות לקחת מזלג ומזלג לפילו אבל גם הוא שומר במקביל להכי מורעב בזמן נתון את המזלגות
-//    שככה שבזמן שהוא מחכה בין לקיחת מזלג למזלג הם לא ילקחו לו
-//    השינוי יהיה שכלל הפילוסופים יבקשו כל פעם לדעת מהמלצר עם המזלג שלהם פנוי
-//    כל פעם מזלג אחר בתורו
-//
-//
-//    ChatGPT said:
-//    רעיון מצוין ואלגנטי!
-//    שיטת המלצר שלך מאפשרת פתרון מבוקר ושקוף למזלגות, תוך מניעת דדלוק וגם שליטה טובה על מי מחזיק מה ומתי.
-//
-//    איך לממש את זה בקוד?
-//    רעיון עיקרי
-//    המלצר שולט במזלגות ומקצה אותם לפילוסופים לפי תור.
-//
-//    כל פילוסוף לא "תופס" מזלג ישירות, אלא מבקש מהמלצר רשות לקחת מזלג אחד בכל פעם.
-//
-//    המלצר בודק לפי סדר העדיפות (מי הכי מורעב וכו'), ומאפשר רק לפילוסוף אחד להחזיק מזלג מסוים בכל רגע.
-//
-//            המלצר שומר "בזמן אמת" את המזלגות של הפילוסוף הכי מורעב כדי שלא יפסיד אותם (למשל בין ניסיון לקחת מזלג ראשון למזלג שני).
-//
-//    כך אין סיכון שמזלג יילקח ע"י פילוסוף אחר בזמן הפסקה בין שני המזלגות.
-
-
 
 
 
@@ -47,46 +24,110 @@ public class Waiter {
             wait();
         }
         this.setingPhilosopher.add(p);
-        this.notifyAll();
+        this.updateState();
     }
 
     public synchronized void leaveSeat(Philosopher p) {
         this.setingPhilosopher.remove(p);
-        this.notifyAll();
-    }
-
-
-
-
-
-
-
-    private boolean ifLeftForkAvailable(Philosopher philosopher){
-        Fork leftFork1=philosopher.getLeftFork1();
-        if (leftFork1.getHeldBy()!=null){
-            return false;
-        }
-        return true;
-    }
-    private boolean ifRightForkAvailable(Philosopher philosopher){
-        Fork rightFork2=philosopher.getRightFork2();
-        if (rightFork2.getHeldBy()!=null){
-            return false;
-        }
-        return true;
+        this.updateState();
     }
 
     private Philosopher findTheStarvingPhilosopher(){
-        int minEatingCount= this.setingPhilosopher.get(0).getEatingCount();
-        Philosopher starvingPhilosopher = this.setingPhilosopher.get(0);
+        if (setingPhilosopher.isEmpty()) return null;
+        Philosopher theStarving = this.setingPhilosopher.get(0);
         for (Philosopher philosopher : this.setingPhilosopher){
-            if(philosopher.getEatingCount()<minEatingCount){
-                minEatingCount=philosopher.getEatingCount();
-                starvingPhilosopher=philosopher;
+            if(philosopher.getEatingCount()<theStarving.getEatingCount()){
+                theStarving=philosopher;
             }
         }
-        return starvingPhilosopher;
+        return theStarving;
     }
+
+
+    private void removeForFromReservationsFor(Philosopher philosopher) {
+        Fork leftFork =philosopher.getLeftFork1();
+        Fork rightFork = philosopher.getRightFork2();
+        this.saveForkForPhilo.remove(leftFork, philosopher);
+        this.saveForkForPhilo.remove(rightFork ,philosopher);
+
+
+    }
+
+    public synchronized void takeForkFromPhilo(Philosopher philosopher) {
+        Fork left = philosopher.getLeftFork1();
+        Fork right = philosopher.getRightFork2();
+        if (left.getHeldBy() == philosopher) {left.setHeldBy(null);}
+        if (right.getHeldBy() == philosopher) {right.setHeldBy(null);}
+        this.removeForFromReservationsFor(philosopher);
+        this.updateState();
+    }
+    private boolean theForkReservedForSomeoneElse(Philosopher philosopher ,Fork fork){
+        if (this.saveForkForPhilo.containsKey(fork)){
+            if (this.saveForkForPhilo.get(fork)!=philosopher)
+            {
+                return true;}
+        }
+        return false;
+    }
+
+
+    public void reservForksToHungriestPhilo() {
+        Philosopher mostHungry = findTheStarvingPhilosopher();
+        if (mostHungry == null) return;
+        Fork left = mostHungry.getLeftFork1();
+        Fork right = mostHungry.getRightFork2();
+
+        if (!theForkReservedForSomeoneElse(mostHungry, left)
+                && !theForkReservedForSomeoneElse(mostHungry, right)
+                ) {
+            this.saveForkForPhilo.put(left, mostHungry);
+            this.saveForkForPhilo.put(right, mostHungry);
+        }
+    }
+
+    private void updateState() {
+        notifyAll();
+    }
+
+    public synchronized boolean requestFork(Philosopher p, Fork fork) {
+        if (fork.getHeldBy() != null) return false;
+        if (this.theForkReservedForSomeoneElse(p, fork)) return false;
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+    public boolean ifLeftForkAvailable(Philosopher philosopher){
+        Fork leftFork1=philosopher.getLeftFork1();
+        if(!requestFork(philosopher,leftFork1)){return false;}
+        philosopher.getLeftFork1().setHeldBy(philosopher);
+        return true;
+    }
+
+    public boolean ifRightForkAvailable(Philosopher philosopher){
+        Fork rightFork2=philosopher.getRightFork2();
+        if(!requestFork(philosopher,rightFork2)){return false;}
+        philosopher.getRightFork2().setHeldBy(philosopher);
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -37,18 +37,18 @@ public class PhilosophersPanel extends JPanel {
         super.paintComponent(graphics);
         for (Philosopher p : this.philosophers) {
             p.paint(graphics);
-            //repaint();
-
         }
 
         for (Fork fork : forks.values()) {
             fork.updatePosition();
             fork.paint(graphics);
-            //repaint();
-
         }
         graphics.setColor(Color.RED);
-        graphics.fillOval(TheFeast.CANTER_TABLE_X - 2, TheFeast.CANTER_TABLE_Y - 2, 5, 5);
+        graphics.drawOval(
+                TheFeast.CANTER_TABLE_X - TheFeast.RADIUS_TABLE,
+                TheFeast.CANTER_TABLE_Y - TheFeast.RADIUS_TABLE,
+                 2 *TheFeast.RADIUS_TABLE,
+                 2*TheFeast.RADIUS_TABLE);
     }
 }
 
