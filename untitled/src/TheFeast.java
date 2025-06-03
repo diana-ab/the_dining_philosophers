@@ -6,7 +6,7 @@ import java.util.Map;
 public class TheFeast {
     public static final int RADIUS_TABLE = 150;
     public static final int NUM_PHILOSOPHERS = 5;
-    public static final String[] NAMES = {"John Lock", "Plato", "Socrates", "Nietzsche", "Descartes"};
+    public static final String[] NAMES = {"Hillel the Elder", "Socrates", "Confucius", "Plato", "Akiva"};
 
     private List<Philosopher> philosophers;
     private Map<Integer, Fork> forks;
