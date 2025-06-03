@@ -1,34 +1,33 @@
 import java.awt.*;
 
 public class ProgramObject {
-    private int x;
-    private int y;
+    private Point point;
     private int width;
     private int height;
 
     public ProgramObject(int y, int x, int width, int height) {
-        this.y = y;
-        this.x = x;
+        this.point=new Point(x,y);
         this.width = width;
         this.height = height;
     }
 
     public int getY() {
-        return y;
+        return this.point.getY();
     }
 
     public void setY(int y) {
-        this.y = y;
+        this.point.setY(y);
     }
 
     public int getX() {
-        return x;
+        return this.point.getX();
     }
 
     public void setX(int x) {
-        this.x = x;
+        this.point.setX(x);
     }
+
     public void paint(Graphics g) {
-        g.fillRect( this.x, this.y, this.width, this.height);
+        g.fillRect( this.getX(), this.getY(), this.width, this.height);
     }
 }
