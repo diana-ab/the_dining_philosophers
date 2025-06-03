@@ -12,7 +12,7 @@ public class PhilosophersPanel extends JPanel {
 
     public PhilosophersPanel(int x, int y, int width, int height) {
         this.setBounds(x, y, width, height);
-        this.feast = new TheFeast();
+        this.feast = new TheFeast(width,height);
         this.philosophers = feast.getPhilosophers();
         this.forks = feast.getForks();
 
@@ -20,8 +20,24 @@ public class PhilosophersPanel extends JPanel {
         for (ToggleButton button : this.buttonList) {
             this.add(button);
         }
-        Timer repaintTimer = new Timer(100, e -> repaint());
-        repaintTimer.start();
+        this.repaintThread();
+
+
+
+    }
+    public void repaintThread(){
+        Thread repaintThread = new Thread(() -> {
+            while (true) {
+                Utils.sleep(20);
+
+
+                SwingUtilities.invokeLater(() -> {
+                    this.repaint();
+                });
+            }
+        });
+        repaintThread.setDaemon(true);
+        repaintThread.start();
 
     }
 
@@ -44,11 +60,21 @@ public class PhilosophersPanel extends JPanel {
             fork.paint(graphics);
         }
         graphics.setColor(Color.RED);
+
         graphics.drawOval(
-                TheFeast.CANTER_TABLE_X - TheFeast.RADIUS_TABLE,
-                TheFeast.CANTER_TABLE_Y - TheFeast.RADIUS_TABLE,
+                this.feast.getCenterTableX() - TheFeast.RADIUS_TABLE,
+                this.feast.getCenterTableY()- TheFeast.RADIUS_TABLE,
                  2 *TheFeast.RADIUS_TABLE,
                  2*TheFeast.RADIUS_TABLE);
+
+        for (int i = 0; i < philosophers.size(); i++) {
+            Philosopher current = philosophers.get(i);
+            Philosopher next = philosophers.get((i + 1) % philosophers.size());
+            if (current.isEating() && next.isEating()) {
+                System.err.println("⚠️ Warning: " + current.getName() + " and " + next.getName() + " are eating together!");
+            }
+        }
     }
+
 }
 

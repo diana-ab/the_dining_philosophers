@@ -1,5 +1,6 @@
 import java.awt.*;
 
+
 public class Fork extends ProgramObject {
     public static final int WIDTH = 10;
     public static final int HEIGHT = 40;
@@ -43,17 +44,43 @@ public class Fork extends ProgramObject {
                     this.heldBy.getName();
 
         }
+
     }
+
+//    public void updatePosition() {
+//        if (heldBy != null) {
+//            this.targetX = heldBy.getX() + Philosopher.WIDTH / 2;
+//            this.targetY = heldBy.getY() + Philosopher.HEIGHT / 2;
+//            this.setX(targetX);
+//            this.setY(targetY);
+//        } else {
+//            this.setX((this.originalX));
+//            this.setY((this.originalY));
+//        }
+//    }
+
 
     public void updatePosition() {
         if (heldBy != null) {
-            this.targetX = heldBy.getX() + Philosopher.WIDTH / 2;
-            this.targetY = heldBy.getY() + Philosopher.HEIGHT / 2;
+            int philosopherCenterX = heldBy.getX() + Philosopher.WIDTH / 2;
+            int philosopherCenterY = heldBy.getY() + Philosopher.HEIGHT / 2;
+
+            double alpha = 0.3;
+
+            this.targetX = (int) (originalX * (1 - alpha) + philosopherCenterX * alpha);
+            this.targetY = (int) (originalY * (1 - alpha) + philosopherCenterY * alpha);
+
+            // הפרדה בין מזלגות - הטיה קטנה בזווית שונה לכל מזלג
+            double angle = Math.toRadians(30 * number); // שונה לכל מזלג
+            int forkSeparation = 8;
+            this.targetX += (int) (forkSeparation * Math.cos(angle));
+            this.targetY += (int) (forkSeparation * Math.sin(angle));
+
             this.setX(targetX);
             this.setY(targetY);
         } else {
-            this.setX((this.originalX));
-            this.setY((this.originalY));
+            this.setX(originalX);
+            this.setY(originalY);
         }
     }
 
@@ -66,8 +93,12 @@ public class Fork extends ProgramObject {
         if (heldBy != null) {
             g.setColor(Color.RED);
         } else {
-            g.setColor(Color.BLACK);
+            g.setColor(Color.green);
         }
         g.fillRect(this.getX(), this.getY(), WIDTH, HEIGHT);
+
+        g.setFont(new Font("Arial", Font.BOLD, 15));
+
+        g.drawString(String.valueOf(this.number), this.getX() +20, this.getY()+20);
     }
 }

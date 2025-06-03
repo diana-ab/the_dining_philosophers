@@ -1,13 +1,16 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.swing.*;
+import java.util.*;
 
 public class Waiter {
+    private static final int MAX_GAP = 2;
+    private static final long COOLDOWN_FOR_GAP = 5000;
 
-    private List <Philosopher> setingPhilosopher;
-    private int maxSetingPhilosophers;
-    private Map<Fork,Philosopher>  saveForkForPhilo;
+    private Map<Philosopher, Long> blockedTheFatUntil;
+    private List<Philosopher> sittingPhilosopher;
+    private int maxSittingPhilosophers;
+    private Map<Fork, Philosopher> saveForkForPhilo;
+    private List<Philosopher> allPhilosopher;
+
 
     public Waiter(int cherNumber) {
         this.maxSetingPhilosophers =cherNumber-1;
@@ -15,6 +18,10 @@ public class Waiter {
         this.saveForkForPhilo=new HashMap<>();
 
 
+    }
+
+    public void setPhilosophers(List<Philosopher> philosophers) {
+        this.allPhilosopher = philosophers;
     }
 
 
@@ -67,22 +74,33 @@ public class Waiter {
             {
                 return true;}
         }
-        return false;
+        return reservd;
     }
 
 
-    public void reservForksToHungriestPhilo() {
+    public void balanceHunger() {
         Philosopher mostHungry = findTheStarvingPhilosopher();
-        if (mostHungry == null) return;
-        Fork left = mostHungry.getLeftFork1();
-        Fork right = mostHungry.getRightFork2();
-
-        if (!theForkReservedForSomeoneElse(mostHungry, left)
-                && !theForkReservedForSomeoneElse(mostHungry, right)
-                ) {
-            this.saveForkForPhilo.put(left, mostHungry);
-            this.saveForkForPhilo.put(right, mostHungry);
+        if (mostHungry == null || !mostHungry.isActivePhilosopher()) return;
+        Philosopher theFat = findTheFat();
+        reservedFork(mostHungry);
+        int gap = theFat.getEatingCount() - mostHungry.getEatingCount();
+        if (gap >= MAX_GAP && !this.blockedTheFatUntil.containsKey(theFat)) {
+            this.blockedTheFatUntil.put(theFat, System.currentTimeMillis() + COOLDOWN_FOR_GAP);
         }
+        this.blockedTheFatUntil.entrySet().removeIf(entry -> System.currentTimeMillis() > entry.getValue());
+
+    }
+
+    private void reservedFork(Philosopher philosopher) {
+        Fork left = philosopher.getLeftFork1();
+        Fork right = philosopher.getRightFork2();
+        if (!theForkReservedForSomeoneElse(philosopher, left)
+                && !theForkReservedForSomeoneElse(philosopher, right)
+        ) {
+            this.saveForkForPhilo.put(left, philosopher);
+            this.saveForkForPhilo.put(right, philosopher);
+        }
+
     }
 
     private void updateState() {
@@ -90,9 +108,13 @@ public class Waiter {
     }
 
     public synchronized boolean requestFork(Philosopher p, Fork fork) {
-        if (fork.getHeldBy() != null) return false;
-        if (this.theForkReservedForSomeoneElse(p, fork)) return false;
-        return true;
+        boolean freeFork = true;
+        if (fork.getHeldBy() != null) {
+            freeFork = false;
+        } else if (this.theForkReservedForSomeoneElse(p, fork)) {
+            freeFork = false;
+        }
+        return freeFork;
     }
 
 
@@ -117,17 +139,16 @@ public class Waiter {
         return true;
     }
 
+    private Philosopher findTheFat() {
+        Philosopher theFat = this.allPhilosopher.get(0);
+        for (Philosopher p : this.allPhilosopher) {
+            if (p.getEatingCount() > theFat.getEatingCount()) {
+                theFat = p;
+            }
+        }
+        return theFat;
 
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 
