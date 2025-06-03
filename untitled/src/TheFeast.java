@@ -22,20 +22,18 @@ public class TheFeast {
         this.forks = this.generateFork();
         this.philosophers = this.generatePhilosopher();
         this.waiter.setPhilosophers(this.philosophers);
-
         this.feast();
-
     }
 
     private void feast() {
         new Thread(() -> {
             while (true) {
 
-//                System.out.println(philosophers.get(1));
-//                System.out.println(philosophers.get(0));
-//                System.out.println(philosophers.get(2));
-//                System.out.println(philosophers.get(3));
-//                System.out.println(philosophers.get(4));
+                System.out.println(philosophers.get(1));
+                System.out.println(philosophers.get(0));
+                System.out.println(philosophers.get(2));
+                System.out.println(philosophers.get(3));
+                System.out.println(philosophers.get(4));
                 this.waiter.balanceHunger();
                 this.findTheNotActivePhilo();
                 Utils.sleep(1000);
@@ -134,10 +132,6 @@ public class TheFeast {
 
     public int getCenterTableY() {
         return centerTableY;
-    }
-
-    public void setCenterTableY(int centerTableY) {
-        this.centerTableY = centerTableY;
     }
 
     private void findTheNotActivePhilo() {

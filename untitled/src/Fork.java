@@ -6,7 +6,6 @@ public class Fork extends ProgramObject {
     public static final int HEIGHT = 40;
 
 
-
     private int originalX;
     private int originalY;
     private int number;
@@ -44,21 +43,7 @@ public class Fork extends ProgramObject {
                     this.heldBy.getName();
 
         }
-
     }
-
-//    public void updatePosition() {
-//        if (heldBy != null) {
-//            this.targetX = heldBy.getX() + Philosopher.WIDTH / 2;
-//            this.targetY = heldBy.getY() + Philosopher.HEIGHT / 2;
-//            this.setX(targetX);
-//            this.setY(targetY);
-//        } else {
-//            this.setX((this.originalX));
-//            this.setY((this.originalY));
-//        }
-//    }
-
 
     public void updatePosition() {
         if (heldBy != null) {
@@ -70,8 +55,8 @@ public class Fork extends ProgramObject {
             this.targetX = (int) (originalX * (1 - alpha) + philosopherCenterX * alpha);
             this.targetY = (int) (originalY * (1 - alpha) + philosopherCenterY * alpha);
 
-            // הפרדה בין מזלגות - הטיה קטנה בזווית שונה לכל מזלג
-            double angle = Math.toRadians(30 * number); // שונה לכל מזלג
+
+            double angle = Math.toRadians(30 * number);
             int forkSeparation = 8;
             this.targetX += (int) (forkSeparation * Math.cos(angle));
             this.targetY += (int) (forkSeparation * Math.sin(angle));
@@ -99,6 +84,6 @@ public class Fork extends ProgramObject {
 
         g.setFont(new Font("Arial", Font.BOLD, 15));
 
-        g.drawString(String.valueOf(this.number), this.getX() +20, this.getY()+20);
+        g.drawString(String.valueOf(this.number), this.getX() + 20, this.getY() + 20);
     }
 }

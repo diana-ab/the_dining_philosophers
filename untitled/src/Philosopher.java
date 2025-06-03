@@ -44,8 +44,8 @@ public class Philosopher extends ProgramObject {
 
         statusMap = new HashMap<>();
         statusMap.put(THINKING, new PhilosopherStatus("thinking", LIGHT_GRAY));
-        statusMap.put(WAITING_FOR_FORK_1, new PhilosopherStatus("waiting for left fork: " + leftFork1.getNumber(), ORANGE));
-        statusMap.put(WAITING_FOR_FORK_2, new PhilosopherStatus("waiting for right fork: " + rightFork2.getNumber(), ORANGE));
+        statusMap.put(WAITING_FOR_FORK_1, new PhilosopherStatus("waiting for left fork:" + leftFork1.getNumber(), ORANGE));
+        statusMap.put(WAITING_FOR_FORK_2, new PhilosopherStatus("waiting for right fork:" + rightFork2.getNumber(), ORANGE));
         statusMap.put(EATING, new PhilosopherStatus("eating", GREEN));
 
         this.activatePhilosopher();
@@ -97,7 +97,6 @@ public class Philosopher extends ProgramObject {
                 return;
             }
         }
-
     }
 
     private void waitForChar() {
@@ -146,7 +145,6 @@ public class Philosopher extends ProgramObject {
                 info.getText() + " (total times he ate: " + this.eatingCount + ")";
     }
 
-
     public boolean isActivePhilosopher() {
         return activePhilosopher;
     }
@@ -184,14 +182,6 @@ public class Philosopher extends ProgramObject {
         g.drawString("ate: " + this.eatingCount, this.getX() + X_LOCATION_FOR_WRITING, this.getY() + (Y_LOCATION_FOR_WRITING * 3));
     }
 
-    public void setLeftFork1(Fork leftFork1) {
-        this.leftFork1 = leftFork1;
-    }
-
-    public void setRightFork2(Fork rightFork2) {
-        this.rightFork2 = rightFork2;
-    }
-
     public Fork getLeftFork1() {
         return leftFork1;
     }
@@ -204,9 +194,12 @@ public class Philosopher extends ProgramObject {
         return eatingCount;
     }
 
-    public boolean isEating(){
-        if (this.statusForPhilo==EATING){return true;}
-        else{ return false;}
+    public boolean isEating() {
+        if (this.statusForPhilo == EATING) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

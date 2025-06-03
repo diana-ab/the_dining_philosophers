@@ -6,7 +6,7 @@ public class ProgramObject {
     private int height;
 
     public ProgramObject(int y, int x, int width, int height) {
-        this.point=new Point(x,y);
+        this.point = new Point(x, y);
         this.width = width;
         this.height = height;
     }
@@ -28,6 +28,6 @@ public class ProgramObject {
     }
 
     public void paint(Graphics g) {
-        g.fillRect( this.getX(), this.getY(), this.width, this.height);
+        g.fillRect(this.getX(), this.getY(), this.width, this.height);
     }
 }

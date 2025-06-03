@@ -18,14 +18,11 @@ public class Waiter {
         this.sittingPhilosopher = new ArrayList<>();
         this.saveForkForPhilo = new HashMap<>();
         this.allPhilosopher = new ArrayList<>();
-
-
     }
 
     public void setPhilosophers(List<Philosopher> philosophers) {
         this.allPhilosopher = philosophers;
     }
-
 
     public synchronized void requestSeat(Philosopher p) throws InterruptedException {
         while (this.sittingPhilosopher.size() >= this.maxSittingPhilosophers ||
@@ -60,8 +57,6 @@ public class Waiter {
         Fork rightFork = philosopher.getRightFork2();
         this.saveForkForPhilo.remove(leftFork, philosopher);
         this.saveForkForPhilo.remove(rightFork, philosopher);
-
-
     }
 
     public synchronized void takeForkFromPhilo(Philosopher philosopher) {
@@ -89,7 +84,6 @@ public class Waiter {
         return reservd;
     }
 
-
     public void balanceHunger() {
         Philosopher mostHungry = findTheStarvingPhilosopher();
         if (mostHungry == null || !mostHungry.isActivePhilosopher()) return;
@@ -100,7 +94,6 @@ public class Waiter {
             this.blockedTheFatUntil.put(theFat, System.currentTimeMillis() + COOLDOWN_FOR_GAP);
         }
         this.blockedTheFatUntil.entrySet().removeIf(entry -> System.currentTimeMillis() > entry.getValue());
-
     }
 
     private void reservedFork(Philosopher philosopher) {
@@ -112,7 +105,6 @@ public class Waiter {
             this.saveForkForPhilo.put(left, philosopher);
             this.saveForkForPhilo.put(right, philosopher);
         }
-
     }
 
     private void updateState() {
@@ -128,7 +120,6 @@ public class Waiter {
         }
         return freeFork;
     }
-
 
     public synchronized boolean ifLeftForkAvailable(Philosopher philosopher) {
         Fork leftFork1 = philosopher.getLeftFork1();
@@ -158,7 +149,4 @@ public class Waiter {
         return theFat;
 
     }
-
-
-
 }

@@ -12,7 +12,7 @@ public class PhilosophersPanel extends JPanel {
 
     public PhilosophersPanel(int x, int y, int width, int height) {
         this.setBounds(x, y, width, height);
-        this.feast = new TheFeast(width,height);
+        this.feast = new TheFeast(width, height);
         this.philosophers = feast.getPhilosophers();
         this.forks = feast.getForks();
 
@@ -21,11 +21,9 @@ public class PhilosophersPanel extends JPanel {
             this.add(button);
         }
         this.repaintThread();
-
-
-
     }
-    public void repaintThread(){
+
+    public void repaintThread() {
         Thread repaintThread = new Thread(() -> {
             while (true) {
                 Utils.sleep(20);
@@ -38,7 +36,6 @@ public class PhilosophersPanel extends JPanel {
         });
         repaintThread.setDaemon(true);
         repaintThread.start();
-
     }
 
     private List<ToggleButton> generateButtons() {
@@ -63,9 +60,9 @@ public class PhilosophersPanel extends JPanel {
 
         graphics.drawOval(
                 this.feast.getCenterTableX() - TheFeast.RADIUS_TABLE,
-                this.feast.getCenterTableY()- TheFeast.RADIUS_TABLE,
-                 2 *TheFeast.RADIUS_TABLE,
-                 2*TheFeast.RADIUS_TABLE);
+                this.feast.getCenterTableY() - TheFeast.RADIUS_TABLE,
+                2 * TheFeast.RADIUS_TABLE,
+                2 * TheFeast.RADIUS_TABLE);
 
         for (int i = 0; i < philosophers.size(); i++) {
             Philosopher current = philosophers.get(i);
@@ -75,6 +72,5 @@ public class PhilosophersPanel extends JPanel {
             }
         }
     }
-
 }
 
