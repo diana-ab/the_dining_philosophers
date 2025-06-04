@@ -4,6 +4,8 @@ import java.awt.*;
 public class Fork extends ProgramObject {
     public static final int WIDTH = 10;
     public static final int HEIGHT = 40;
+    public static final int FORK_SEPARATION = 8;
+    public static final double ALPHA = 0.3;
 
 
     private int originalX;
@@ -49,17 +51,12 @@ public class Fork extends ProgramObject {
         if (heldBy != null) {
             int philosopherCenterX = heldBy.getX() + Philosopher.WIDTH / 2;
             int philosopherCenterY = heldBy.getY() + Philosopher.HEIGHT / 2;
-
-            double alpha = 0.3;
-
-            this.targetX = (int) (originalX * (1 - alpha) + philosopherCenterX * alpha);
-            this.targetY = (int) (originalY * (1 - alpha) + philosopherCenterY * alpha);
-
+            this.targetX = (int) (originalX * (1 - ALPHA) + philosopherCenterX * ALPHA);
+            this.targetY = (int) (originalY * (1 - ALPHA) + philosopherCenterY * ALPHA);
 
             double angle = Math.toRadians(30 * number);
-            int forkSeparation = 8;
-            this.targetX += (int) (forkSeparation * Math.cos(angle));
-            this.targetY += (int) (forkSeparation * Math.sin(angle));
+            this.targetX += (int) (FORK_SEPARATION * Math.cos(angle));
+            this.targetY += (int) (FORK_SEPARATION * Math.sin(angle));
 
             this.setX(targetX);
             this.setY(targetY);

@@ -5,8 +5,12 @@ import java.util.Map;
 
 public class TheFeast {
     public static final int RADIUS_TABLE = 150;
+    public static final int ADD_RADIUS_PHILO = 110;
+    public static final int ADD_RADIUS_FORK = 40;
     public static final int NUM_PHILOSOPHERS = 5;
     public static final String[] NAMES = {"Hillel the Elder", "Socrates", "Confucius", "Plato", "Akiva"};
+    public static final int SLEEP =1000;
+    public static final Double CIRCLE =2 * Math.PI;
 
     private List<Philosopher> philosophers;
     private Map<Integer, Fork> forks;
@@ -36,7 +40,7 @@ public class TheFeast {
                 System.out.println(philosophers.get(4));
                 this.waiter.balanceHunger();
                 this.findTheNotActivePhilo();
-                Utils.sleep(1000);
+                Utils.sleep(SLEEP);
             }
         }).start();
     }
@@ -52,14 +56,14 @@ public class TheFeast {
 
 
     private double calculateAngle(double index) {
-        return 2 * Math.PI * index / NUM_PHILOSOPHERS;
+        return CIRCLE * index / NUM_PHILOSOPHERS;
     }
 
 
     private Point calculatePhilosopherPosition(int index) {
         int clockwiseIndex = (NUM_PHILOSOPHERS - index) % NUM_PHILOSOPHERS;
         double angle = calculateAngle(clockwiseIndex + 0.5);
-        int baseRadius = RADIUS_TABLE + 110;
+        int baseRadius = RADIUS_TABLE + ADD_RADIUS_PHILO;
 
         double balance = 20 * Math.abs(Math.cos(angle));
 
@@ -74,7 +78,7 @@ public class TheFeast {
     private Point calculateForkPosition(int index) {
         double angle = calculateAngle(index);
 
-        int forkRadius = RADIUS_TABLE - 40;
+        int forkRadius = RADIUS_TABLE - ADD_RADIUS_FORK;
 
         int x = (int) (centerTableX + forkRadius * Math.cos(angle));
         int y = (int) (centerTableY + forkRadius * Math.sin(angle));

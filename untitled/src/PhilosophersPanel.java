@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 public class PhilosophersPanel extends JPanel {
+    private static final int SLEEP_REPAINT =20;
+
     private List<Philosopher> philosophers;
     private Map<Integer, Fork> forks;
     private TheFeast feast;
     private List<ToggleButton> buttonList;
+
 
     public PhilosophersPanel(int x, int y, int width, int height) {
         this.setBounds(x, y, width, height);
@@ -26,7 +29,7 @@ public class PhilosophersPanel extends JPanel {
     public void repaintThread() {
         Thread repaintThread = new Thread(() -> {
             while (true) {
-                Utils.sleep(20);
+                Utils.sleep(SLEEP_REPAINT);
 
 
                 SwingUtilities.invokeLater(() -> {
